@@ -140,6 +140,39 @@ function postUrlByParams(url, headers, reqData) {
     }).catch(error => console.log('错误提示', error));
 }
 
+/**
+ * 
+ * @param {String} url 请求地址
+ * @param {Object} headers 携带header头对象
+ * @param {Object} reqData 携带请求体对象
+ */
+function postUrlByForm(url, headers, reqData) {
+    return new Promise((resolve, reject) => {
+        request({
+            url: url,
+            method: "POST",
+            headers: headers,
+            form: reqData
+        }, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                var html = {
+                    header: response.headers,
+                    body: body
+                }
+                if (body != "") {
+                    resolve(html);
+                } else {
+                    reject(null);
+                }
+
+            } else {
+                console.log("请求出错！");
+                reject(null);
+            }
+        });
+    }).catch(error => console.log('错误提示', error));
+}
+
 
 function postWithoutBody(url, headers) {
     return new Promise((resolve, reject) => {
@@ -274,8 +307,8 @@ async function getLocationList() {
     if (locationResult != null) {
         const locationObj = JSON.parse(locationResult.body);
         if (locationObj != null) {
-            console.log(locationObj.locationInfo.locations);
-            console.log(userInfo.cookie);
+            // console.log(locationObj.locationInfo.locations);
+            // console.log(userInfo.cookie);
             console.log("6.获取地址列表成功！");
         } else {
             console.log("6.获取地址列表信息失败，流程中止！");
@@ -287,7 +320,37 @@ async function getLocationList() {
         return;
     }
 
+    /*打卡头部信息 */
+    puchHeader = {
+        Cookie: userInfo.cookie,
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+
+    /*打卡信息 */
+    var punchData = {
+        locationid: '104',
+        longitude: '104.063551',
+        latitude: '30.541763',
+        locationshowaddress: '1',
+        deviceInfo: '{"errCode":0,"errMsg":"getClientInfo:ok","clientType":"3","clientVersion":"7.0.37.20200806","deviceId":"a9ec035dad4bc285","osVersion":29,"clientModel":"Xiaomi,MI 9","clientFont":"1","clientTheme":"#393F9D","clientLang":"zh","networkType":"wifi","BSSID":"9c:a6:15:b2:b4:8b","SSID":"YanFa_5G"}'     
+    }
+    const punchResult = await postUrlByForm(puchButtonUrl, puchHeader, punchData);
+    if(punchResult != null){
+        const punchObj = JSON.parse(punchResult.body);
+        if(punchObj.success == "1"){
+            console.log("7.PUNCH成功！");
+        }else{
+            console.log("7.PUNCH失败，流程中止！");
+        }
+        
+    }else{
+        console.log("7.PUNCH失败，流程中止！");
+        return;
+    }
+
 }
+
+
 
 // getUrlByParams(cornerUrl).then(function (result) {
 // postUrlByParams(locationUrl, {}, result).then(function(resp){
