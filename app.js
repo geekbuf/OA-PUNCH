@@ -288,7 +288,9 @@ async function getLocationList() {
 
     //对cookie进行鉴权测试
     const testCookieUrl = getTestCookieUrl(userInfo.user_id, userInfo.sysid, userInfo.auth_code);
-    const testCookieResult = await getUrlByParams(testCookieUrl, {Cookie: userInfo.cookie});
+    const testCookieResult = await getUrlByParams(testCookieUrl, {
+        Cookie: userInfo.cookie
+    });
     if (testCookieResult != null) {
         const testObj = JSON.parse(testCookieResult.body);
         if (testObj.msg == "ok") {
@@ -332,18 +334,18 @@ async function getLocationList() {
         longitude: '104.063551',
         latitude: '30.541763',
         locationshowaddress: '1',
-        deviceInfo: '{"errCode":0,"errMsg":"getClientInfo:ok","clientType":"3","clientVersion":"7.0.37.20200806","deviceId":"a9ec035dad4bc285","osVersion":29,"clientModel":"Xiaomi,MI 9","clientFont":"1","clientTheme":"#393F9D","clientLang":"zh","networkType":"wifi","BSSID":"9c:a6:15:b2:b4:8b","SSID":"YanFa_5G"}'     
+        deviceInfo: '{"errCode":0,"errMsg":"getClientInfo:ok","clientType":"3","clientVersion":"7.0.37.20200806","deviceId":"a9ec035dad4bc285","osVersion":29,"clientModel":"Xiaomi,MI 9","clientFont":"1","clientTheme":"#393F9D","clientLang":"zh","networkType":"wifi","BSSID":"9c:a6:15:b2:b4:8b","SSID":"YanFa_5G"}'
     }
     const punchResult = await postUrlByForm(puchButtonUrl, puchHeader, punchData);
-    if(punchResult != null){
+    if (punchResult != null) {
         const punchObj = JSON.parse(punchResult.body);
-        if(punchObj.success == "1"){
+        if (punchObj.success == "1") {
             console.log("7.PUNCH成功！");
-        }else{
+        } else {
             console.log("7.PUNCH失败，流程中止！");
         }
-        
-    }else{
+
+    } else {
         console.log("7.PUNCH失败，流程中止！");
         return;
     }
