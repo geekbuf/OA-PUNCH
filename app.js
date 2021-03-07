@@ -4,7 +4,7 @@
  * 3. 获取生成Cookie地址 tourl
  * 4. 获取cookie Set-Cookie
  * 5. 对cookie进行鉴权测试（少了这部无法继续下一步）
- * 5. 获取列表信息 
+ * 5. 获取预设打卡地址列表信息 
  * 6. 根据需求进行操作
  */
 let request = require('request')
@@ -13,10 +13,10 @@ const {
     userInfo
 } = require('os')
 
-var domain = '119.3.147.83'
-var port = '8999'
-var userName = 'guxs'
-var pwd = 'abc123'
+var domain = 'your server ip' //OA服务器IP
+var port = 'your server port' //OA服务器端口
+var userName = 'your account' //账号
+var pwd = 'your password' //密码
 var genUUID = UUID.v1();
 
 securityUrl = `http://${domain}:${port}/emp/passport/securitysetting/get?&loginUUID=${genUUID}`;
@@ -328,7 +328,7 @@ async function getLocationList() {
         'Content-Type': 'application/x-www-form-urlencoded'
     }
 
-    /*打卡信息 */
+    /*打卡信息 这部分内容可以实时打卡抓包获取 */
     var punchData = {
         locationid: '104',
         longitude: '104.063551',
@@ -336,6 +336,7 @@ async function getLocationList() {
         locationshowaddress: '1',
         deviceInfo: '{"errCode":0,"errMsg":"getClientInfo:ok","clientType":"3","clientVersion":"7.0.37.20200806","deviceId":"a9ec035dad4bc285","osVersion":29,"clientModel":"Xiaomi,MI 9","clientFont":"1","clientTheme":"#393F9D","clientLang":"zh","networkType":"wifi","BSSID":"9c:a6:15:b2:b4:8b","SSID":"YanFa_5G"}'
     }
+    
     const punchResult = await postUrlByForm(puchButtonUrl, puchHeader, punchData);
     if (punchResult != null) {
         const punchObj = JSON.parse(punchResult.body);
